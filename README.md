@@ -16,7 +16,7 @@
 
 ![HomeScreen Android](./screenshots/androidHomeScreen.png)
 ![EpisodesView Android](./screenshots/androidEpisodes.png)
-![EpisodesDetailedScreen Android](./screenshots/androidDetailedEpisodes.png.png)
+![EpisodesDetailedScreen Android](./screenshots/androidDetailedEpisodes.png)
 
 ## 🚀 Getting Started
 
