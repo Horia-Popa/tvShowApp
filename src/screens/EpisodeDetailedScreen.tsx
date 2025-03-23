@@ -69,13 +69,42 @@ const DetailedEpisodeScreen = ({
 
   const handleOpenURL = async () => {
     if (episode?.url) {
-      const canOpen = await Linking.canOpenURL(episode.url);
+      try {
+        // Check if the URL can be opened
+        const canOpen = await Linking.canOpenURL(episode.url);
 
-      if (canOpen) {
-        await Linking.openURL(episode.url);
-      } else {
-        Alert.alert('Error', 'Cannot open URL');
+        if (canOpen) {
+          // Try to open the URL
+          await Linking.openURL(episode.url);
+        } else {
+          console.log('Cannot open URL:', episode.url);
+          // Try with https:// prefix if it doesn't have one
+          if (!episode.url.startsWith('https://')) {
+            const httpsUrl =
+              'https://' + episode.url.replace(/^https?:\/\//, '');
+            console.log('Trying with https:', httpsUrl);
+
+            const canOpenHttps = await Linking.canOpenURL(httpsUrl);
+            if (canOpenHttps) {
+              await Linking.openURL(httpsUrl);
+              return;
+            }
+          }
+
+          // Added for Android
+          const encodedUrl = encodeURI(episode.url);
+          await Linking.openURL(encodedUrl);
+          Alert.alert(
+            'Cannot Open Link',
+            'Your device cannot open this link. The URL is: ' + episode.url,
+          );
+        }
+      } catch (errorText) {
+        console.error('Error opening URL:', errorText);
+        Alert.alert('Error', 'Failed to open URL: ' + errorText);
       }
+    } else {
+      Alert.alert('No URL', 'This episode has no URL available.');
     }
   };
 
@@ -185,7 +214,6 @@ const DetailedEpisodeScreen = ({
             styles.urlButton,
             pressed && styles.urlButtonPressed,
           ]}
-          android_ripple={{color: 'rgba(128, 128, 128, 0.3)'}}
           onPress={handleOpenURL}
           testID="view-url-button">
           <FontAwesomeIcon

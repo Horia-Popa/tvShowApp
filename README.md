@@ -100,7 +100,6 @@ The app uses a custom wrapper around the Fetch API to handle data retrieval from
 - Type-safe API responses
 - Error handling
 - Loading state management
-- Caching strategies for improved performance
 
 ### UI/UX:
 

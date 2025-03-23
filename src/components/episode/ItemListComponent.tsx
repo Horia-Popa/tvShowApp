@@ -78,7 +78,6 @@ const ItemListComponent = ({
           styles.cardContainer,
           pressed && {opacity: 0.85, transform: [{scale: 0.98}]},
         ]}
-        android_ripple={{color: 'rgba(0, 0, 0, 0.1)'}}
         onPress={() => onEpisodePress(item)}>
         <View style={styles.card}>
           {item.image ? (
@@ -141,7 +140,6 @@ const ItemListComponent = ({
             selectedSeason === season && styles.selectedSeasonButton,
             pressed && {opacity: 0.8, transform: [{scale: 0.95}]},
           ]}
-          android_ripple={{color: 'rgba(0, 0, 0, 0.1)'}}
           onPress={() => setSelectedSeason(season)}>
           <Text
             style={[
@@ -219,11 +217,6 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 8,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
   },
   image: {
     width: '100%',
