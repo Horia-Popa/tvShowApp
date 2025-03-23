@@ -10,6 +10,14 @@
 
 ## ADD IMAGES
 
+![HomeScreen](./screenshots/iOSHomeScreen.png)
+![EpisodesView](./screenshots/iOSEpisodes.png)
+![EpisodesDetailedScreen](./screenshots/iOSDetailedEpisodes.png.png)
+
+![HomeScreen Android](./screenshots/androidHomeScreen.png)
+![EpisodesView Android](./screenshots/androidEpisodes.png)
+![EpisodesDetailedScreen Android](./screenshots/androidDetailedEpisodes.png.png)
+
 ## 🚀 Getting Started
 
 ### Prerequisites
