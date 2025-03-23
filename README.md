@@ -1,97 +1,145 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+## 📖 Project Overview
 
-# Getting Started
+- **Purpose**: A fan app for the popular TV show "Ted Lasso" providing information about the show, its episodes, and cast
+- **Core Features**:
+  - General show details
+  - Episodes browser with season filtering
+  - Episode details with favorites functionality
+  - Cast members listing
+  - Favorites management with local persistence
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## ADD IMAGES
 
-## Step 1: Start Metro
+## 🚀 Getting Started
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+### Prerequisites
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+- Have Xcode or Android Studio installed and an emulator set-up
+- For iOS have Cocoapods installed. For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
 
-```sh
-# Using npm
-npm start
+### Installation
 
-# OR using Yarn
-yarn start
+1. Clone the repository
+2. cd [/tvShowApp]
+3. npm install
+4. npm start
+
+# For Android
+
 ```
-
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
 npm run android
-
-# OR using Yarn
-yarn android
 ```
 
-### iOS
+# For iOS
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
 ```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+cd ios
+pod install
+cd ..
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+If it doesn't run, please open Xcode and open the `tvShowApp.xcworkspace` file inside the ios folder.
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## Technologies & Design Decisions
 
-## Step 3: Modify your app
+### Tech Stack
 
-Now that you have successfully run the app, let's make changes!
+- **Frontend**: React Native CLI (TypeScript)
+- **State Management**: Zustand
+- **API Integration**: Custom fetch wrapper
+- **Navigation**: React Navigation
+- **Persistence**: AsyncStorage
+- **Styling**: StyleSheet
+- **Icons**: FontAwesome
+- **Testing**: Jest with React Native Testing Library
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+## Key Design Decisions
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+### Architecture:
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+The app follows a modular component-based approach with clear separation of concerns between UI, data fetching, and state management. This increases the maintainability and testability of the codebase.
 
-## Congratulations! :tada:
+#### Folder structure rationale
 
-You've successfully run and modified your React Native App. :partying_face:
+```bash
+tvShowApp/
+├── android/
+├── ios/
+├── src/
+│   ├── api/
+│   │   ├── index.ts
+│   │   ├── types.ts
+│   │   └── showService.ts
+│   ├── components/
+│   │   ├── common/
+│   │   ├── episode/
+│   ├── navigation/
+│   ├── screens/
+│   ├── stores/
+│   │   ├── useShowStore.ts
+│   │   └── useFavoriteStore.ts
+│   ├── tests
+├── __tests__/
+├── App.tsx
+├── jest.config.js
+└── package.json
+```
 
-### Now what?
+### State Management:
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+Zustand was chosen for state management because of its simplicity and light footprint. Two main stores were implemented:
 
-# Troubleshooting
+1. **ShowStore**: Manages show data, episodes, and cast information fetched from the TVMaze API
+2. **FavoriteStore**: Handles user favorites with persistence using AsyncStorage
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+### Data Fetching:
 
-# Learn More
+The app uses a custom wrapper around the Fetch API to handle data retrieval from the TVMaze API. The implementation includes:
 
-To learn more about React Native, take a look at the following resources:
+- Type-safe API responses
+- Error handling
+- Loading state management
+- Caching strategies for improved performance
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+### UI/UX:
+
+The UI design focuses on showcasing the rich visual content from the show with:
+
+- Large hero images for the show and episodes
+- Horizontal scrolling lists for easy browsing
+- Season filters for quick navigation
+- Visually distinct favorites functionality
+- Clean typography and spacing for readability
+
+### Testing:
+
+The application includes comprehensive unit tests for:
+
+- Zustand stores (showStore and favoriteStore)
+- API service functions
+
+### Persistence:
+
+User favorites are persisted locally using AsyncStorage via Zustand's persist middleware, ensuring favorites remain available across app restarts.
+
+## Future Improvements
+
+To enhance the app further, potential improvements include:
+
+- Adding search functionality for episodes and cast
+- Implementing episode filtering by various criteria (rating, favorites)
+- Creating a more detailed cast member profile screen
+- Implementing push notifications for encouragement to watch again favorite episodes
+- Adding a dark mode theme option
+- Expanding test coverage to include more UI components
+- Adding end-to-end tests with Detox
+
+## API Integration
+
+The app connects to the TVMaze API to fetch show data:
+
+- Show info: https://api.tvmaze.com/shows/44458
+- Episode list: https://api.tvmaze.com/shows/44458/episodes
+- Cast: https://api.tvmaze.com/shows/44458/cast
+- Episode by Id: https://api.tvmaze.com/episodes/1874762

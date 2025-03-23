@@ -2,11 +2,11 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '../screens/HomeScreen';
-import EpisodeDetailedScreen from '../screens/EpisodeDetailedScreen';
+import DetailedEpisodeScreen from '../screens/EpisodeDetailedScreen';
 
 export type AppNavigatorParamList = {
   HomeScreen: undefined;
-  EpisodeDetailedScreen: {episodeId: string};
+  DetailedEpisodeScreen: {episodeId: number};
 };
 
 const Stack = createNativeStackNavigator<AppNavigatorParamList>();
@@ -21,8 +21,8 @@ const AppNavigator = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="EpisodeDetailedScreen"
-          component={EpisodeDetailedScreen}
+          name="DetailedEpisodeScreen"
+          component={DetailedEpisodeScreen}
           options={{title: 'Episode '}}
         />
       </Stack.Navigator>

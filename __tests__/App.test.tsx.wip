@@ -1,0 +1,14 @@
+// __tests__/App.test.tsx
+import React from 'react';
+import { render } from '@testing-library/react-native';
+import App from '../App';
+
+
+describe('App', () => {
+  test('renders correctly', () => {
+    // This is a simple test to ensure the App component renders without crashing
+    // You might need to add more mocks depending on what your App component uses
+    render(<App />);
+    // No assertion needed - if render doesn't throw, the test passes
+  });
+});

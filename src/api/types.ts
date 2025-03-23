@@ -19,12 +19,7 @@ export interface ShowResponse {
     average: number | null;
   };
   weight: number;
-  network: null | {
-    id: number;
-    name: string;
-    country: any;
-    officialSite: string;
-  };
+  network: null;
   webChannel: {
     id: number;
     name: string;

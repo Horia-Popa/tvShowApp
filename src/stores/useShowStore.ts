@@ -1,5 +1,10 @@
 import {create} from 'zustand';
-import {fetchShowInfo, fetchEpisodes, fetchCast} from '../api/showService';
+import {
+  fetchShowInfo,
+  fetchEpisodes,
+  fetchCast,
+  fetchEpisodeById,
+} from '../api/showService';
 import {ShowStore} from './types';
 
 const useShowStore = create<ShowStore>((set, get) => ({
@@ -72,18 +77,44 @@ const useShowStore = create<ShowStore>((set, get) => ({
     }
   },
 
+  getEpisodeById: async (episodeId: number) => {
+    const existingEpisode = get().episodes.find(
+      episode => episode.id === episodeId,
+    );
+
+    if (existingEpisode) {
+      return existingEpisode;
+    }
+
+    try {
+      set(state => ({
+        isLoading: {...state.isLoading, episodes: true},
+        error: null,
+      }));
+
+      const episode = await fetchEpisodeById(episodeId);
+
+      set(state => ({
+        isLoading: {...state.isLoading, episodes: false},
+      }));
+
+      return episode;
+    } catch (error) {
+      set(state => ({
+        error: `Failed to fetch episode with ID ${episodeId}`,
+        isLoading: {...state.isLoading, episodes: false},
+      }));
+      return null;
+    }
+  },
+
   fetchAllData: async () => {
-    // Fetch all data in parallel
     await Promise.all([
       get().fetchShowInfo(),
       get().fetchEpisodes(),
       get().fetchCast(),
     ]);
   },
-
-  //   getEpisodeById: (episodeId) => {
-  //     return get().episodes.find(episode => episode.id === episodeId);
-  //   },
 }));
 
 export default useShowStore;

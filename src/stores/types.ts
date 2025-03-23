@@ -17,7 +17,7 @@ export interface ShowStoreActions {
   fetchEpisodes: () => Promise<void>;
   fetchCast: () => Promise<void>;
   fetchAllData: () => Promise<void>;
-  //   getEpisodeById: (episodeId: number) => EpisodeResponse | undefined;
+  getEpisodeById: (episodeId: number) => Promise<EpisodeResponse | null>;
 }
 
 export type ShowStore = ShowStoreState & ShowStoreActions;
@@ -28,8 +28,8 @@ export interface FavoriteStoreState {
 }
 
 export interface FavoriteStoreActions {
-  toggleFavorite: (episodeId: number) => void;
-  isFavorite: (episodeId: number) => boolean;
+  toggleFavorite: (episodeId: string) => void;
+  isFavorite: (episodeId: string) => boolean;
   getFavorites: () => number[];
   clearAllFavorites: () => void;
 }

@@ -1,4 +1,3 @@
-// src/components/episode/HorizontalEpisodeList.tsx
 import React, {useState, useEffect} from 'react';
 import {
   FlatList,
@@ -6,17 +5,20 @@ import {
   Text,
   Image,
   StyleSheet,
-  TouchableOpacity,
   Dimensions,
   ScrollView,
+  Pressable,
 } from 'react-native';
 import {EpisodeResponse} from '../../api/types';
+import {faHeart, faStar} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import useFavoriteStore from '../../stores/useFavoriteStore';
 
 interface ItemListComponentProps {
   episodes: EpisodeResponse[];
   onEpisodePress: (episode: EpisodeResponse) => void;
   title?: string;
-  allEpisodes?: boolean; // If true, show all episodes with season selector
+  allEpisodes?: boolean;
 }
 
 const {width} = Dimensions.get('window');
@@ -35,7 +37,9 @@ const ItemListComponent = ({
   );
   const [availableSeasons, setAvailableSeasons] = useState<number[]>([]);
 
-  // Extract all seasons from episodes
+  const {isFavorite} = useFavoriteStore();
+
+  // Get all seasons from episodes
   useEffect(() => {
     if (episodes.length > 0) {
       const seasons = Array.from(new Set(episodes.map(ep => ep.season))).sort();
@@ -69,20 +73,32 @@ const ItemListComponent = ({
       : 'No summary available';
 
     return (
-      <TouchableOpacity
-        style={styles.cardContainer}
-        onPress={() => onEpisodePress(item)}
-        activeOpacity={0.8}>
+      <Pressable
+        style={({pressed}) => [
+          styles.cardContainer,
+          pressed && {opacity: 0.85, transform: [{scale: 0.98}]},
+        ]}
+        android_ripple={{color: 'rgba(0, 0, 0, 0.1)'}}
+        onPress={() => onEpisodePress(item)}>
         <View style={styles.card}>
           {item.image ? (
-            <Image
-              source={{uri: item.image.medium}}
-              style={styles.image}
-              resizeMode="cover"
-            />
+            <View>
+              <Image
+                source={{uri: item.image.medium}}
+                style={styles.image}
+                resizeMode="cover"
+              />
+              <View style={styles.favoriteButton}>
+                <FontAwesomeIcon
+                  icon={faHeart}
+                  size={24}
+                  color={isFavorite(item.id) ? '#E91E63' : '#757575'}
+                />
+              </View>
+            </View>
           ) : (
             <View style={styles.noImage}>
-              <Text style={styles.noImageText}>No Image</Text>
+              <Text>No Image</Text>
             </View>
           )}
 
@@ -91,9 +107,12 @@ const ItemListComponent = ({
               <Text style={styles.episodeNumber}>
                 S{item.season}:E{item.number}
               </Text>
-              <Text style={styles.rating}>
-                ⭐ {item.rating?.average || 'N/A'}
-              </Text>
+              <View style={styles.ratingContainer}>
+                <FontAwesomeIcon icon={faStar} size={14} color="#FFC107" />
+                <Text style={styles.rating}>
+                  {item.rating?.average || 'N/A'}
+                </Text>
+              </View>
             </View>
 
             <Text style={styles.title} numberOfLines={1}>
@@ -105,7 +124,7 @@ const ItemListComponent = ({
             </Text>
           </View>
         </View>
-      </TouchableOpacity>
+      </Pressable>
     );
   };
 
@@ -115,12 +134,14 @@ const ItemListComponent = ({
       showsHorizontalScrollIndicator={false}
       contentContainerStyle={styles.seasonButtonsContainer}>
       {availableSeasons.map(season => (
-        <TouchableOpacity
+        <Pressable
           key={`season-button-${season}`}
-          style={[
+          style={({pressed}) => [
             styles.seasonButton,
             selectedSeason === season && styles.selectedSeasonButton,
+            pressed && {opacity: 0.8, transform: [{scale: 0.95}]},
           ]}
+          android_ripple={{color: 'rgba(0, 0, 0, 0.1)'}}
           onPress={() => setSelectedSeason(season)}>
           <Text
             style={[
@@ -129,7 +150,7 @@ const ItemListComponent = ({
             ]}>
             Season {season}
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       ))}
     </ScrollView>
   );
@@ -164,7 +185,10 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   sectionTitle: {
-    // ...typography.sectionTitle,
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 12,
+    color: '#000',
   },
   seasonButtonsContainer: {
     paddingBottom: 12,
@@ -177,19 +201,15 @@ const styles = StyleSheet.create({
     marginRight: 8,
     marginBottom: 8,
     borderWidth: 1,
-    // borderColor: colors.border,
   },
   selectedSeasonButton: {
     backgroundColor: '#fff',
-    // borderColor: colors.primary,
   },
   seasonButtonText: {
     fontSize: 14,
     fontWeight: '500',
-    // color: colors.text,
   },
   selectedSeasonButtonText: {
-    // color: colors.white,
     fontWeight: '600',
   },
   cardContainer: {
@@ -197,7 +217,6 @@ const styles = StyleSheet.create({
     marginHorizontal: CARD_MARGIN,
   },
   card: {
-    // backgroundColor: colors.card,
     borderRadius: 8,
     overflow: 'hidden',
     shadowColor: '#000',
@@ -213,13 +232,8 @@ const styles = StyleSheet.create({
   noImage: {
     width: '100%',
     height: 180,
-    // backgroundColor: colors.backgroundLight,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  noImageText: {
-    // ...typography.body,
-    // color: colors.textLight,
   },
   episodeInfo: {
     paddingTop: 8,
@@ -230,21 +244,29 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   episodeNumber: {
-    // ...typography.caption,
     color: '#000',
     fontWeight: 'bold',
   },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   rating: {
-    // ...typography.caption,
+    marginLeft: 5,
   },
   title: {
-    // ...typography.subtitle,
+    fontWeight: 600,
     marginBottom: 8,
   },
   summary: {
-    // ...typography.body,
     fontSize: 14,
     color: '#000',
+  },
+  favoriteButton: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    padding: 8,
   },
 });
 
